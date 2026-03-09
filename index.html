@@ -2,17 +2,19 @@
 <html>
 <head>
 <title>Lindy's Birthday Surprise 🎁</title>
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
 <style>
 body {
   margin: 0;
   padding: 0;
-  background: linear-gradient(120deg, #ff9a9e, #fad0c4);
+  background: linear-gradient(120deg, #1e3c72, #2a5298);
   font-family: Arial, sans-serif;
   text-align: center;
   overflow: hidden;
+  color: white;
 }
 
-#gift {
+#cake {
   font-size: 100px;
   cursor: pointer;
   display: inline-block;
@@ -20,23 +22,31 @@ body {
   user-select: none;
 }
 
-#gift:hover {
+#cake:hover {
   transform: scale(1.3) rotate(-10deg);
 }
 
 #message {
   display: none;
-  font-size: 32px;
+  font-family: 'Great Vibes', cursive;
+  font-size: 36px;
   margin-top: 30px;
   opacity: 0;
 }
 
+#funMessage {
+  display: none;
+  font-size: 22px;
+  margin-top: 15px;
+  opacity: 0;
+  font-weight: bold;
+}
+
 .balloon {
   position: absolute;
-  width: 50px;
-  height: 70px;
-  background: red;
-  border-radius: 50% 50% 50% 50%;
+  width: 40px;
+  height: 60px;
+  border-radius: 50%;
   opacity: 0.8;
   animation: floatUp linear infinite;
 }
@@ -50,63 +60,93 @@ body {
 <body>
 
 <h1>Lindy, someone left you a gift 👀</h1>
-<div id="gift">🎁</div>
-<div id="message"></div>
+<div id="cake">🎂</div>
+<div id="message">🎉 Happy Birthday Queen, Lindy! 👑🎉</div>
+<div id="funMessage">Enjoy your day to the fullest, bruuhhh 😎💥. Hope you crush all your goals this year!</div>
+
 <canvas id="confetti"></canvas>
 <audio id="popSound" src="https://freesound.org/data/previews/341/341695_3248244-lq.mp3"></audio>
 
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 <script>
-// ---------- Confetti ----------
 const canvas = document.getElementById('confetti');
-const ctx = canvas.getContext('2d');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-const gift = document.getElementById('gift');
+const cake = document.getElementById('cake');
 const message = document.getElementById('message');
+const funMessage = document.getElementById('funMessage');
 const popSound = document.getElementById('popSound');
 
+cake.addEventListener('click', () => {
+  popSound.play();
+  showMessage(message, () => showMessage(funMessage));
+  launchConfetti();
+  spawnHearts();
+  spawnBalloons();
+});
+
+// ---------- Letter by letter message ----------
+function showMessage(element, callback) {
+  element.style.display = 'block';
+  let text = element.textContent;
+  element.textContent = '';
+  element.style.opacity = 1;
+  let i = 0;
+  const interval = setInterval(() => {
+    if (i < text.length) {
+      element.textContent += text[i];
+      i++;
+    } else {
+      clearInterval(interval);
+      if(callback) callback();
+    }
+  }, 40);
+}
+
+// ---------- Confetti ----------
 function launchConfetti() {
   const duration = 3000;
   const end = Date.now() + duration;
-
   (function frame() {
     confetti({
       particleCount: 7,
       spread: 100,
       origin: { x: Math.random(), y: Math.random() * 0.5 },
       colors: ['#ff0a54','#ff477e','#ff85a1','#fbb1b1','#f9bec7'],
-      shapes: ['circle', 'square', 'star', 'triangle'],
+      shapes: ['circle','square','star','heart'],
     });
-    if (Date.now() < end) {
-      requestAnimationFrame(frame);
-    }
+    if (Date.now() < end) requestAnimationFrame(frame);
   })();
 }
 
-// ---------- Gift click ----------
-gift.addEventListener('click', () => {
-  popSound.play();
-  message.style.display = 'block';
-  typeMessage("🎉 Happy 22nd Birthday, Lindy! 🎉\nI hope today brings you laughter, good vibes, and maybe a little adventure too 😉");
-  launchConfetti();
-  spawnBalloons();
-});
+// ---------- Floating hearts ----------
+function spawnHearts() {
+  for(let i=0;i<15;i++){
+    const heart = document.createElement('div');
+    heart.classList.add('balloon');
+    heart.style.left = Math.random()*window.innerWidth+'px';
+    heart.style.width = '30px';
+    heart.style.height = '30px';
+    heart.style.background = 'pink';
+    heart.style.borderRadius = '50%';
+    heart.textContent = '❤️';
+    heart.style.fontSize = '24px';
+    document.body.appendChild(heart);
+    animateHeart(heart);
+  }
+}
 
-// ---------- Letter by letter message ----------
-function typeMessage(text) {
-  message.textContent = "";
-  let i = 0;
-  message.style.opacity = 1;
-  const interval = setInterval(() => {
-    if (i < text.length) {
-      message.textContent += text[i];
-      i++;
-    } else {
-      clearInterval(interval);
+function animateHeart(el){
+  let pos = window.innerHeight;
+  const id = setInterval(()=>{
+    pos -= 2 + Math.random()*2;
+    el.style.transform = `translateY(${pos}px) rotate(${Math.random()*360}deg)`;
+    if(pos < -50){ 
+      clearInterval(id); 
+      el.remove();
     }
-  }, 40);
+  }, 20);
 }
 
 // ---------- Balloons ----------
@@ -125,4 +165,3 @@ function spawnBalloons() {
 
 </body>
 </html>
-Upgrade birthday page with confetti, balloons, and animations
