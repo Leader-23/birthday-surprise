@@ -1,2 +1,4 @@
-# birthday-surprise
-An interactive birthday gift page with a surprise message  and confetti.
+# Lindy's Birthday Surprise 🎁
+
+This is a small interactive HTML page to celebrate Lindy's 22nd birthday.
+Click the gift box to see a confetti animation and birthday message.
