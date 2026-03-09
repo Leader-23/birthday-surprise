@@ -2,107 +2,74 @@
 <html>
 <head>
 <title>Lindy's Birthday Surprise 🎁</title>
-
 <style>
-body{
-  background:#111827;
-  color:white;
-  font-family:Arial;
-  text-align:center;
-  padding-top:100px;
+body {
+  background: #111827;
+  color: white;
+  font-family: Arial, sans-serif;
+  text-align: center;
+  padding-top: 100px;
 }
 
-#gift{
-  font-size:80px;
-  cursor:pointer;
-  transition:transform 0.3s;
+#gift {
+  font-size: 80px;
+  cursor: pointer;
+  transition: transform 0.3s;
 }
 
-#gift:hover{
-  transform:scale(1.2);
+#gift:hover {
+  transform: scale(1.2);
 }
 
-#message{
-  display:none;
-  font-size:30px;
-  margin-top:30px;
-}
-
-canvas{
-  position:fixed;
-  top:0;
-  left:0;
+#message {
+  display: none;
+  font-size: 30px;
+  margin-top: 30px;
 }
 </style>
-
 </head>
-
 <body>
 
 <h1>Lindy, someone left you a gift 👀</h1>
-
-<div id="gift" onclick="openGift()">🎁</div>
-
+<div id="gift">🎁</div>
 <div id="message">
 🎉 Happy 22nd Birthday, Lindy! 🎉 <br><br>
 I hope today brings you laughter, good vibes,<br>
 and maybe a little adventure too 😉
 </div>
 
-<canvas id="confetti"></canvas>
-
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 <script>
+const gift = document.getElementById('gift');
+const message = document.getElementById('message');
 
-function openGift(){
-  document.getElementById("message").style.display="block";
-  startConfetti();
-}
+gift.addEventListener('click', () => {
+  message.style.display = 'block';
+  // fire confetti for 2 seconds
+  const duration = 2 * 1000;
+  const end = Date.now() + duration;
 
-const canvas = document.getElementById("confetti");
-const ctx = canvas.getContext("2d");
+  (function frame() {
+    confetti({
+      particleCount: 5,
+      angle: 60,
+      spread: 55,
+      origin: { x: 0 }
+    });
+    confetti({
+      particleCount: 5,
+      angle: 120,
+      spread: 55,
+      origin: { x: 1 }
+    });
 
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-
-let pieces = [];
-
-for(let i=0;i<150;i++){
-  pieces.push({
-    x:Math.random()*canvas.width,
-    y:Math.random()*canvas.height,
-    r:Math.random()*6+2,
-    d:Math.random()*150
-  });
-}
-
-function draw(){
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  ctx.fillStyle="white";
-
-  pieces.forEach(p=>{
-    ctx.beginPath();
-    ctx.arc(p.x,p.y,p.r,0,Math.PI*2,true);
-    ctx.fill();
-  });
-
-  update();
-}
-
-function update(){
-  pieces.forEach(p=>{
-    p.y+=2;
-    if(p.y>canvas.height){
-      p.y=0;
-      p.x=Math.random()*canvas.width;
+    if (Date.now() < end) {
+      requestAnimationFrame(frame);
     }
-  });
-}
-
-function startConfetti(){
-  setInterval(draw,20);
-}
-
+  })();
+});
 </script>
 
 </body>
-  </html>
+</html>
+Replace old code with working confetti birthday page
